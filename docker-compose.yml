@@ -1,0 +1,18 @@
+version: "3"
+
+services:
+  api:
+    container_name: api
+    build: .
+    command: bash -c "yarn && yarn dev"
+    ports:
+      - "8001:8001"
+    volumes:
+      - .:/usr/app
+    networks:
+      - api-backend
+networks:
+  api-backend:
+    external:
+      name: api-backend    
+
