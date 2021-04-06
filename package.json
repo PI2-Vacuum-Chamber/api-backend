@@ -6,6 +6,7 @@
     "dev": "nodemon src/server.js"
   },
   "dependencies": {
+    "@influxdata/influxdb-client": "^1.12.0",
     "dotenv": "^8.2.0",
     "ejs": "^2.7.2",
     "express": "^4.17.1",

@@ -1,5 +1,6 @@
+require('dotenv/config');
 import app from './app';
 
-const PORT = 8001;
+const PORT = process.env.PORT;
 
 app.listen(PORT);
