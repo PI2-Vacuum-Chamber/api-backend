@@ -1,2 +1,0 @@
-const influx = require('Influx');
-
