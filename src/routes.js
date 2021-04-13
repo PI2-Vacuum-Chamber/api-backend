@@ -7,6 +7,7 @@ routes.get('/', (req, res) => {
   res.json({ msg: 'hello word' });
 });
 
-routes.get('/newpoint', SensorControllers.createData());
+routes.get('/newpoint', SensorControllers.createData);
+routes.get('/teste', SensorControllers.teste);
 
 export default routes;
