@@ -42,19 +42,22 @@ module.exports = {
     },
 
     async insertDatas(request, response) {
-
-        const datas = request.body;
+        // { datas = [{id: 1, type: temperature, value: 22}, {id: 2, type: pressure, value: 1000}] }
+        const { datas } = request.body;
+        // datas = [{id: 1, type: temperature, value: 22}, {id: 2, type: pressure, value: 1000}]
+        console.log(datas);
 
         try {
             const writeApi = client.getWriteApi(org, bucket);
 
-            for (const position in datas) {
-                writeApi.useDefaultTags({host: datas[position].id});
-                
-                const point = new Point(datas[position].type)
-                .floatField('data', datas[position].value);
+            datas.forEach(data => {
+                console.log(data);
+                // data = {id: 1, type: temperature, value: 22}
+                writeApi.useDefaultTags({host: data.id});
+                const point = new Point(data.type).floatField('data', data.value);
                 writeApi.writePoint(point);
-            }
+                
+            });
             writeApi
                 .close()
                 .then(() => {

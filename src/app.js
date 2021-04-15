@@ -6,6 +6,9 @@ const routes = require('./routes');
 const sensorRoutes = require('./routes/sensor');
 
 const app = express();
+
+app.use(express.json());
+
 app.use(routes);
 app.use('/sensor', sensorRoutes);
 
