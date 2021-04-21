@@ -1,8 +1,9 @@
 const {InfluxDB} = require('@influxdata/influxdb-client')
 const {Point} = require('@influxdata/influxdb-client')
+require('dotenv/config');
 
 // You can generate a Token from the "Tokens Tab" in the UI
-const token = '-qorGm5pjQYlxlC3HdXvln9DZqC44llOGkUXGN7_NoGwFuY0fNM2u9W1pP3zmyLfhC8B49Ob5XWnNzkofFKsIg=='
+const token = process.env.TOKEN
 const org = 'influx'
 const bucket = 'influx'
 
@@ -82,18 +83,23 @@ module.exports = {
 
     async getLatestData(request,response) {
 
-        const id = request.params;
+        const { id } = request.params;
         try {
             const queryApi = client.getQueryApi(org)
-            const query = `from(bucket: "influx") |> range(start: -1h) |> filter(fn: (r) => r.host == ${ id }`;
+            const query = `from(bucket: "influx") 
+                           |> range(start: -1h) 
+                           |> filter(fn: (r) => r.host == "${ id }")
+                           |> last(column: "_value")
+                           |> yield(name: "last") `;
+            console.log(query);
             const rows = await queryApi.collectRows(query);
 
-            return response.status(400).json({
+            return response.status(200).json({
                 msg: `Dado mais novo retornado do sensor ${ id }`,
                 data: rows,
             })
         } catch (error) {
-            return response.status(401).json({
+            return response.status(404).json({
                 msg: 'Sensor não encontrado',
                 data: error,
             });
