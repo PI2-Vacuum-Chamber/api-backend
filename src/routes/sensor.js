@@ -9,6 +9,7 @@ routes.get('/', (req, res) => {
 
 routes.get('/index', SensorControllers.index);
 routes.post('/newpoints', SensorControllers.insertDatas);
+routes.get('/getmeans', SensorControllers.getMeanByLocation);
 routes.get('/:id', SensorControllers.getLatestData);
 
 module.exports = routes;

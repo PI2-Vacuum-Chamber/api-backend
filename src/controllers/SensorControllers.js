@@ -63,9 +63,9 @@ module.exports = {
 
             datas.forEach(data => {
                 console.log(data);
-                // data = {id: 1, type: temperature, value: 22}
+                // data = {id: 1, type: temperature,field: camara, value: 22}
                 writeApi.useDefaultTags({host: data.id});
-                const point = new Point(data.type).floatField('data', data.value);
+                const point = new Point(data.type).floatField(data.field, data.value);
                 writeApi.writePoint(point);
                 
             });
@@ -106,6 +106,31 @@ module.exports = {
 
             return response.status(200).json({
                 msg: `Dado mais novo retornado do sensor ${ id }`,
+                data: rows,
+            })
+        } catch (error) {
+            return response.status(404).json({
+                msg: 'Sensor não encontrado',
+                data: error,
+            });
+        }
+    },
+
+    async getMeanByLocation(request,response) {
+
+        try {
+            const queryApi = client.getQueryApi(org)
+            const query = `from(bucket: "influx")
+                            |> range(start: -1h) 
+                            |> group(columns: ["_field","_measurement"])
+                            |> aggregateWindow(every: 1s, fn: mean, createEmpty: false)
+                            |> last(column: "_value")`;
+            console.log(query);
+            const rows = await queryApi.collectRows(query);
+            console.log(rows);
+
+            return response.status(200).json({
+                msg: `Média dos dados dos sensores por local:`,
                 data: rows,
             })
         } catch (error) {
