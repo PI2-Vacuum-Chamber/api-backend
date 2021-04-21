@@ -13,8 +13,12 @@ module.exports = {
 
     async index(request,response) {
 
-        const queryApi = client.getQueryApi(org)
-        const query = 'from(bucket: "influx") |> range(start: -1h)'
+        try {
+            const queryApi = client.getQueryApi(org)
+            const query = `from(bucket: "influx")
+                            |> range(start: -1h)
+                            |> last(column: "_value")
+                            |> group(columns: ["host", "_measurement"], mode:"by")`
 
         // queryApi.queryRows(query, {
         // next(row, tableMeta) {
@@ -33,12 +37,18 @@ module.exports = {
         // },
         // })
 
-        const rows = await queryApi.collectRows(query);
+            const rows = await queryApi.collectRows(query);
 
-        return response.status(400).json({
-            msg: 'Todos os dados mais novos retornados',
-            data: rows,
-        })
+            return response.status(200).json({
+                msg: 'Todos os dados mais novos retornados',
+                data: rows,
+            })
+        } catch (error) {
+            return response.status(404).json({
+                msg: 'Nenhum dado de sensores encontrados na última hora',
+                data: error,
+            });
+        }
 
     },
 
