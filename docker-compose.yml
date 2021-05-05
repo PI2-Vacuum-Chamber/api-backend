@@ -1,18 +1,36 @@
 version: "3"
 
 services:
+  influxdb:
+    container_name: influxdb
+    image: quay.io/influxdb/influxdb:v2.0.3
+    environment:
+      DOCKER_INFLUXDB_INIT_USERNAME: influx
+      DOCKER_INFLUXDB_INIT_PASSWORD: influx
+      DOCKER_INFLUXDB_INIT_ORG: influx
+      DOCKER_INFLUXDB_INIT_BUCKET: influx
+    volumes:
+      # Mount for influxdb data directory and configuration
+      - influxdbv2:/.influxdbv2
+    ports:
+      - "8086:8086"
+    networks:
+      - api-backend
   api:
     container_name: api
     build: .
-    command: bash -c "yarn && yarn dev"
+    command: bash -c "yarn && yarn start"
     ports:
       - "8001:8001"
     volumes:
       - .:/usr/app
     networks:
       - api-backend
+    depends_on:
+      - "influxdb"
 networks:
   api-backend:
     external:
       name: api-backend    
-
+volumes:
+  influxdbv2:

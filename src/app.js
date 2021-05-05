@@ -1,30 +1,43 @@
-import express from 'express';
-import { createServer } from 'http';
-import path from 'path';
-import ejs from 'ejs';
-import routes from './routes';
+const express = require('express');
+const { createServer } = require('http');
+const path = require('path');
+const ejs = require('ejs');
+const routes = require('./routes');
+const sensorRoutes = require('./routes/sensor');
+const controlRoutes = require('./routes/control');
 
-class App {
-  constructor() {
-    this.server = express();
-    this.app = createServer(this.server);
-    // this.middlewares();
-    this.routes();
-  }
+const app = express();
 
-  // middlewares() {
-  //   this.server.use(express.json());
-  //   this.server.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
-  //   this.server.use(express.static(path.join(__dirname, 'public')));
-  //   this.server.set('views', path.join(__dirname, 'public'));
-  //   this.server.engine('html', ejs.renderFile);
-  //   this.server.set('view engine', 'html');
-  // }
+app.use(routes);
+app.use('/sensor', sensorRoutes);
+app.use('/control', controlRoutes);
 
-  routes() {
-    this.server.use(routes);
-  }
-}
+module.exports = app;
 
-export default new App().app;
+// class App {
+//   constructor() {
+//     this.server = express();
+//     this.app = createServer(this.server);
+//     // this.middlewares();
+//     this.routes();
+//   }
+
+//   // middlewares() {
+//   //   this.server.use(express.json());
+//   //   this.server.use(express.urlencoded({ extended: true }));
+
+//   //   this.server.use(express.static(path.join(__dirname, 'public')));
+//   //   this.server.set('views', path.join(__dirname, 'public'));
+//   //   this.server.engine('html', ejs.renderFile);
+//   //   this.server.set('view engine', 'html');
+//   // }
+
+//   routes() {
+//     this.server.use(routes);
+//     this.server.use('/sensor', sensorRoutes);
+//   }
+// }
+
+// export default new App().app;

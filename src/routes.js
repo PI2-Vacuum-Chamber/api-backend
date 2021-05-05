@@ -1,4 +1,6 @@
-import { Router } from 'express';
+const { Router } = require('express');
+const SensorControllers = require('./controllers/SensorControllers')
+const ControlControllers = require('./controllers/ControlControllers')
 
 const routes = new Router();
 
@@ -6,4 +8,4 @@ routes.get('/', (req, res) => {
   res.json({ msg: 'hello word' });
 });
 
-export default routes;
+module.exports = routes;
