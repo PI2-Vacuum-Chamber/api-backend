@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const SensorControllers = require('../controllers/ControlControllers')
+const ControlControllers = require('../controllers/ControlControllers')
 
 const routes = new Router();
 
@@ -7,8 +7,8 @@ routes.get('/', (req, res) => {
   res.json({ msg: 'hello controls' });
 });
 
-routes.post('/start', SensorControllers.start);
-routes.post('/finish', SensorControllers.finish);
-routes.post('/abort', SensorControllers.abort);
+routes.post('/start', ControlControllers.start);
+routes.post('/finish/:id', ControlControllers.finish);
+routes.post('/abort/:id', ControlControllers.abort);
 
 module.exports = routes;

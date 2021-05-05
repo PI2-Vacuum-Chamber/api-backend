@@ -11,11 +11,11 @@ const client = new InfluxDB({url: 'http://influxdb:8086', token: token})
 
 module.exports = {
 
-    async index(request,response) {
+    async index(request, response) {
 
         try {
             const queryApi = client.getQueryApi(org)
-            const query = `from(bucket: "influx")
+            const query = `from(bucket: "${ bucket }")
                             |> range(start: -1h)
                             |> last(column: "_value")
                             |> group(columns: ["host", "_measurement"], mode:"by")`
@@ -91,7 +91,7 @@ module.exports = {
         }
     },
 
-    async getLatestData(request,response) {
+    async getLatestData(request, response) {
 
         const { id } = request.params;
         try {
@@ -116,7 +116,7 @@ module.exports = {
         }
     },
 
-    async getMeanByLocation(request,response) {
+    async getMeanByLocation(request, response) {
 
         try {
             const queryApi = client.getQueryApi(org)
