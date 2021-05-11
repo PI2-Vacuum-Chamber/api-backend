@@ -16,8 +16,8 @@ module.exports = {
         try {
             const queryApi = client.getQueryApi(org)
             const query = `from(bucket: "${ bucket }")
-                            |> filter(fn: (r) => r["_field"] == "camara" or r["_field"] == "linha")
                             |> range(start: -1h)
+                            |> filter(fn: (r) => r["_field"] == "camara" or r["_field"] == "linha")
                             |> last(column: "_value")
                             |> group(columns: ["host", "_measurement"], mode:"by")`
 
