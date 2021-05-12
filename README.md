@@ -35,7 +35,8 @@ docker-compose down
 7. Com isso já pode utilizar as rotas da API após interromper e subir novamente o docker.
 
 ## Rotas da API
-### rotas GET
+### Sensores
+#### rotas GET
 1. http://localhost:8001/sensor/index : Retorna um array contendo o último dado de cada sensor
 
 2. http://localhost:8001/sensor/getmeans : retorna a média obtida pelos sensores separadas por local
@@ -54,7 +55,7 @@ Todos os dados retornados estão no formato abaixo:
     
 Os demais não são dados relevantes
 
-### Rota POST
+#### Rota POST
 1. http://localhost:8001/sensor/newpoints : cadastra novos dados de sensores.
 
 Ela requer um json no seguinte formato:
@@ -74,4 +75,31 @@ Ela requer um json no seguinte formato:
     ]
 }
 ```
-Podendo receber dados adquiridos de um ou mais sensores
+Podendo receber dados adquiridos de um ou mais sensores.
+
+### Experimentos
+#### Rotas GET
+
+1. http://localhost:8001/control/index : Retorna um array contendo todos os experimentos cadastrados
+
+2. http://localhost:8001/control/:id : retorna os dados de um determinado experimento informado pelo id na rota
+
+#### Rotas POST
+1. http://localhost:8001/control/start : cadastra um novo experimento.
+
+Ela requer um json no seguinte formato:
+```
+{
+    "tempMax": 60,
+    "timeTempMax": 5,
+    "tempMin": -20,
+	"timeTempMin": 5,
+	"qtdeCiclesMax": 1,
+	"qtdeCiclesMin": 1
+}
+```
+Recebendo os parametros do experimento que se deseja cadastrar.
+
+2. http://localhost:8001/control/finish/:id : Finaliza o experimento informado pelo id.
+
+2. http://localhost:8001/control/abort/:id : Realiza uma parada de emergência no experimento informado pelo id.
