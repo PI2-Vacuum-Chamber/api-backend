@@ -27,20 +27,20 @@ module.exports = {
             const writeApi = client.getWriteApi(org, bucket);
             writeApi.useDefaultTags({host: id});
 
-            var point = [];
-            console.log(point);
+            var points = [];
+            console.log(points);
 
-            point.push(new Point('experiment').floatField('checkpoint', 'start'));
-            point.push(new Point('experiment').floatField('tempMax', tempMax));
-            point.push(new Point('experiment').floatField('timeTempMax', timeTempMax));
-            point.push(new Point('experiment').floatField('tempMin', tempMin));
-            point.push(new Point('experiment').floatField('timeTempMin', timeTempMin));
-            point.push(new Point('experiment').floatField('qtdeCiclesMax', qtdeCiclesMax));
-            point.push(new Point('experiment').floatField('qtdeCiclesMin', qtdeCiclesMin));
+            points.push(new Point('experiment').stringField('checkpoint', 'start'));
+            points.push(new Point('experiment').floatField('tempMax', tempMax));
+            points.push(new Point('experiment').floatField('timeTempMax', timeTempMax));
+            points.push(new Point('experiment').floatField('tempMin', tempMin));
+            points.push(new Point('experiment').floatField('timeTempMin', timeTempMin));
+            points.push(new Point('experiment').floatField('qtdeCiclesMax', qtdeCiclesMax));
+            points.push(new Point('experiment').floatField('qtdeCiclesMin', qtdeCiclesMin));
 
-            console.log(point);
+            console.log(points);
             // https://github.com/node-influx/node-influx/issues/297
-            writeApi.writePoints(point);
+            writeApi.writePoints(points);
             
             // writeApi.writePoints(
             //     [
@@ -119,10 +119,9 @@ module.exports = {
             console.log('Experimento finalizado.');
 
             const writeApi = client.getWriteApi(org, bucket);
-            const checkpoint = newDate().getTime();
             writeApi.useDefaultTags({host: id});
 
-            const point = new Point('experiment').floatField('chackpoint', 'finish');
+            const point = new Point('experiment').stringField('checkpoint', 'finish');
 
             writeApi.writePoint(point);
             writeApi
@@ -156,7 +155,7 @@ module.exports = {
             const checkpoint = newDate().getTime();
             writeApi.useDefaultTags({host: id});
 
-            const point = new Point('experiment').floatField('checkpoint', 'finish');
+            const point = new Point('experiment').stringField('checkpoint', 'abort');
 
             writeApi.writePoint(point);
             writeApi
