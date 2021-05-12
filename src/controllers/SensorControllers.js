@@ -17,6 +17,7 @@ module.exports = {
             const queryApi = client.getQueryApi(org)
             const query = `from(bucket: "${ bucket }")
                             |> range(start: -1h)
+                            |> filter(fn: (r) => r["_field"] == "camara" or r["_field"] == "linha")
                             |> last(column: "_value")
                             |> group(columns: ["host", "_measurement"], mode:"by")`
 
@@ -96,7 +97,7 @@ module.exports = {
         const { id } = request.params;
         try {
             const queryApi = client.getQueryApi(org)
-            const query = `from(bucket: "influx") 
+            const query = `from(bucket: "${ bucket }") 
                            |> range(start: -1h) 
                            |> filter(fn: (r) => r.host == "${ id }")
                            |> last(column: "_value")
@@ -120,7 +121,7 @@ module.exports = {
 
         try {
             const queryApi = client.getQueryApi(org)
-            const query = `from(bucket: "influx")
+            const query = `from(bucket: "${ bucket }")
                             |> range(start: -1h) 
                             |> group(columns: ["_field","_measurement"])
                             |> aggregateWindow(every: 1s, fn: mean, createEmpty: false)

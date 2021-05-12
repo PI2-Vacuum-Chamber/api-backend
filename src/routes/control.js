@@ -10,5 +10,7 @@ routes.get('/', (req, res) => {
 routes.post('/start', ControlControllers.start);
 routes.post('/finish/:id', ControlControllers.finish);
 routes.post('/abort/:id', ControlControllers.abort);
+routes.get('/index', ControlControllers.index);
+routes.get('/:id', ControlControllers.read);
 
 module.exports = routes;
