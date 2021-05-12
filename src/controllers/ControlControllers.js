@@ -13,6 +13,29 @@ const client = new InfluxDB({url: 'http://influxdb:8086', token: token})
 
 module.exports = {
 
+    async index(request, response) {
+
+        try {
+            const queryApi = client.getQueryApi(org)
+            const query = `from(bucket: "${ bucket }")
+                            |> range(start: 2020-01-01T23:30:00Z)
+                            |> filter(fn: (r) => r["_field"] == "checkpoint" and r["_measurement"] == "experiment" and r["_value"] == "start")`
+
+            const rows = await queryApi.collectRows(query);
+
+            return response.status(200).json({
+                msg: 'Todos os experimentos cadastrados',
+                data: rows,
+            })
+        } catch (error) {
+            return response.status(404).json({
+                msg: 'Nenhum dado de sensores encontrados na última hora',
+                data: error,
+            });
+        }
+
+    },
+    
     async start(request, response) {
 
         const { tempMax, timeTempMax,
@@ -176,6 +199,30 @@ module.exports = {
                 msg: 'Erro ao interromper o experimento'
             });
         }
+    },
+
+    async read(request, response) {
+        const { id } = request.params;
+        
+        try {
+            const queryApi = client.getQueryApi(org)
+            const query = `from(bucket: "${ bucket }")
+                            |> range(start: 2020-01-01T23:30:00Z)
+                            |> filter(fn: (r) => r["_measurement"] == "experiment" and r["host"] == "${ id }")`
+
+            const rows = await queryApi.collectRows(query);
+
+            return response.status(200).json({
+                msg: 'Todos os dados do experimento',
+                data: rows,
+            })
+        } catch (error) {
+            return response.status(404).json({
+                msg: 'Não foram encontrados dados correspondentes a este experimento',
+                data: error,
+            });
+        }
+
     },
 
 }
